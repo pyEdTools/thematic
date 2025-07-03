@@ -1,35 +1,15 @@
-from app.models import Submission
 from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 from collections import defaultdict
 import numpy as np
 
-def run_analysis(submission_id):
-    submission = Submission.query.get(submission_id)
-    if not submission:
-        return None
 
-    raw_text = submission.raw_data or ''
-    feedback_list = [sentence.strip() for sentence in raw_text.split(',') if sentence.strip()]
-
-    themes_data = {
-        theme.name: [seed.text for seed in theme.seeds]
-        for theme in submission.themes
-    }
-
-    results = thematic_analysis(feedback_list, themes_data)
-
-    return results
-
-
-
-def thematic_analysis(feedback_list, theme_seeds):
-
-    np.random.shuffle(feedback_list)
+def define_themes(words_list, theme_seeds):
+    np.random.shuffle(words_list)
+    
     model = SentenceTransformer('all-MiniLM-L6-v2')
-    word_embeddings = model.encode(feedback_list)
+    word_embeddings = model.encode(words_list)
 
-    #Compute theme centers based on seed words
     theme_centers = []
     theme_labels = []
 
@@ -40,47 +20,19 @@ def thematic_analysis(feedback_list, theme_seeds):
         theme_labels.append(theme)
 
     theme_centers = np.array(theme_centers)
-
-    # Initialize and fit k-means with predefined centers
     num_clusters = len(theme_seeds)
+
     kmeans = KMeans(n_clusters=num_clusters, init=theme_centers, n_init=1, random_state=42)
     kmeans.fit(word_embeddings)
+
     clusters = kmeans.labels_
+    clustered_words = defaultdict(list)
 
+    for word, cluster_id in zip(words_list, clusters):
+        theme = theme_labels[cluster_id]
+        clustered_words[theme].append(word)
 
-    #Organize words by cluster
-    clustered_feedback = defaultdict(list)
-    for word, cluster in zip(feedback_list, clusters):
-        theme = theme_labels[cluster]
-        clustered_feedback[theme].append(word)
-
-    #Print the clusters
-    # for theme, cluster_feedback in clustered_feedback.items():
-    #     print(f"{theme}: {', '.join(cluster_feedback)}")
-        
-    return clustered_feedback
-
-
-
-
-# -------------------- AI Agent--------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return dict(clustered_words)
 
 
 # ------------- Plot Creation -------------
@@ -112,7 +64,7 @@ if __name__ == "__main__":
         "Negative": ["improved", "not expected"]
     }
 
-    results = thematic_analysis(feedback_list, theme_seeds)
+    results = define_themes(feedback_list, theme_seeds)
     print("-----------------------------------------")
     print(results)
     print("-----------------------------------------")

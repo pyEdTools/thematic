@@ -6,7 +6,7 @@ import uuid
 class Submission(db.Model):
     __tablename__ = 'submissions'
 
-    
+
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(36), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
 
@@ -30,22 +30,26 @@ class Feedback(db.Model):
 
 
 class Theme(db.Model):
+    __tablename__ = 'themes'  
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'), nullable=False)
+    submission_id = db.Column(db.Integer, db.ForeignKey('submissions.id'), nullable=False)
 
     seeds = db.relationship('Seed', backref='theme', cascade="all, delete-orphan")
+
+
 
 class Seed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(255), nullable=False)
-    theme_id = db.Column(db.Integer, db.ForeignKey('theme.id'), nullable=False)
+    theme_id = db.Column(db.Integer, db.ForeignKey('themes.id'), nullable=False)
 
 
 
 class ClusterResult(db.Model):
     id= db.Column(db.Integer, primary_key=True)
-    submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'), nullable=False, unique=True)
+    submission_id = db.Column(db.Integer, db.ForeignKey('submissions.id'), nullable=False, unique=True)
     results = db.Column(db.Text, nullable=False) 
 
 
