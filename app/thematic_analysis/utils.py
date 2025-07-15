@@ -39,15 +39,16 @@ def get_codewords(submission_id):
     from app.models import Feedback
 
     feedbacks = Feedback.query.filter_by(submission_id=submission_id).all()
-
     codewords = []
+
     for fb in feedbacks:
         if fb.codewords:
+            # Handle comma-separated string like: "teamwork, leadership"
             words = [word.strip().lower() for word in fb.codewords.split(',') if word.strip()]
             codewords.extend(words)
-    unique_codewords = list(set(codewords))
 
-    return unique_codewords
+    return list(set(codewords))  
+
 
 
 def get_codeword_counts(submission_id):

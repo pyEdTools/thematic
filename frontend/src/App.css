@@ -1,0 +1,51 @@
+.nav-wrapper {
+  background-color: #fafafa;
+  border-bottom: 0.0625rem solid #ddd;
+  /* 1px */
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+}
+
+.tab-title {
+  color: #1a237e;
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.03rem;
+  margin-bottom: 0.5rem;
+}
+
+.custom-tabs .nav-link {
+  color: #333;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+  border-radius: 0.375rem 0.375rem 0 0;
+  font-size: 1rem;
+}
+
+.custom-tabs .nav-link.active {
+  background-color: #e8eaf6;
+  border-color: transparent transparent #1a237e;
+  color: #1a237e;
+  font-weight: 600;
+}
+
+.custom-tabs .nav-link:hover {
+  color: #3949ab;
+  background-color: #f0f0f0;
+}
+
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

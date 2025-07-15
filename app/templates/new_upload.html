@@ -5,8 +5,9 @@
 
 {% block content %}
 
-<div class="container d-flex justify-content-center align-items-center flex-column text-center">
-    <h3 class="mb-5">Choose an Upload Type</h3>
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card shadow-md border rounded p-4" style="width: 28rem;">
+    <h3 class="mb-5" align="center">Choose an Upload Type</h3>
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs justify-content-center mb-4" role="tablist">
@@ -32,11 +33,21 @@
             <div class="tab-pane fade {% if active_tab == 'file' %}show active{% endif %}"
                  id="file-upload" role="tabpanel" 
                  aria-labelledby="file-tab">
-                <p><strong>Instructions:</strong> Lorem ipsum dolor sit amet...</p>
+                <p class="fs-1"><strong>Instructions:</strong> Upload your CSV file containing feedback, specify the column name that holds the
+                    responses, enter your desired themes with related seed words, and click Submit to begin the
+                    analysis.</p>
 
-                <div class="form-group">
-                    <input type="file" class="form-control-file" id="file" name="file" />
+                </p>
+
+                <div class="d-flex flex-column align-items-center">
+                    <label for="file" class="btn btn-dark btn-lg px-5 fw-bold border border-5">
+                         Choose File
+                        <input type="file" id="file" name="file" hidden>
+                    </label>
+                    <p id="file-name" class="text-muted small"></p>
                 </div>
+
+
 
                 <div class="form-group d-flex align-items-center">
                     <label for="feedback_column" class="mb-0 mr-2">Name of column with feedback:</label>
@@ -74,11 +85,11 @@
             </div>
         </div>
 
-        <div id="theme-groups">
+        <!-- <div id="theme-groups">
             <div class="theme-group border p-3 mb-3">
                 <div class="form-group">
                     <label>Theme 1</label>
-                    <input type="text" name="theme[0]" class="form-control" placeholder="Enter theme name" >
+                    <input type="text" name="theme[0]" class="form-control"  >
                 </div>
                 <div class="form-group">
                     <label>Seeds (comma-separated)</label>
@@ -88,14 +99,15 @@
             </div>
         </div>
         
-        <button type="button" class="btn btn-secondary mb-3" id="add-theme">Add Another Theme</button>
-
+        <button type="button" class="btn btn-light mb-3" id="add-theme">Add Another Theme</button>
+-->
 
         <div class="text-center">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
 
     </form>
+    </div>
 </div>
 
         
@@ -123,30 +135,43 @@
 
 
  <script>
-    let themeCount = 1;
-    const maxThemes = 4;
+    // let themeCount = 1;
+    // const maxThemes = 4;
 
-    document.getElementById('add-theme').addEventListener('click', function () {
-        if (themeCount >= maxThemes) return;
+    // document.getElementById('add-theme').addEventListener('click', function () {
+    //     if (themeCount >= maxThemes) return;
 
-        const container = document.getElementById('theme-groups');
-        const index = themeCount;
+    //     const container = document.getElementById('theme-groups');
+    //     const index = themeCount;
 
-        const group = document.createElement('div');
-        group.className = 'theme-group border p-3 mb-3';
-        group.innerHTML = `
-      <div class="form-group">
-        <label>Theme ${index + 1}</label>
-        <input type="text" name="theme[${index}]" class="form-control" placeholder="Enter theme name">
-      </div>
-      <div class="form-group">
-        <label>Seeds (comma-separated)</label>
-        <input type="text" name="seeds[${index}]" class="form-control" placeholder="e.g. Exciting, Inspirational, Scary">
-      </div>
-    `;
-        container.appendChild(group);
-        themeCount++;
+    //     const group = document.createElement('div');
+    //     group.className = 'theme-group border p-3 mb-3';
+    //     group.innerHTML = `
+    //   <div class="form-group">
+    //     <label>Theme ${index + 1}</label>
+    //     <input type="text" name="theme[${index}]" class="form-control">
+    //   </div>
+    //   <div class="form-group">
+    //     <label>Seeds (comma-separated)</label>
+    //     <input type="text" name="seeds[${index}]" class="form-control" placeholder="e.g. Exciting, Inspirational, Scary">
+    //   </div>
+    // `;
+    //     container.appendChild(group);
+    //     themeCount++;
+    // });
+
+
+
+
+    const fileInput = document.getElementById('file');
+    const fileNameDisplay = document.getElementById('file-name');
+
+    fileInput.addEventListener('change', () => {
+        fileNameDisplay.textContent = fileInput.files[0]?.name || '';
     });
+  
+
+
 </script> 
 
 

@@ -2,6 +2,8 @@
 from . import db
 from sqlalchemy.sql import func
 import uuid
+from sqlalchemy import JSON
+
 
 class Submission(db.Model):
     __tablename__ = 'submissions'
@@ -23,7 +25,9 @@ class Feedback(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_name = db.Column(db.String(100), nullable=True)  # Optional, if present in CSV
     feedback_text = db.Column(db.Text, nullable=False)
-    codewords = db.Column(db.Text, nullable=True)  # Comma-separated or JSON depending on your needs
+    codewords = db.Column(JSON, nullable=True)
+    approved = db.Column(db.Boolean, default=False)
+
 
     submission_id = db.Column(db.Integer, db.ForeignKey('submissions.id'), nullable=False)
 
