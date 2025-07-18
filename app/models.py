@@ -57,6 +57,13 @@ class ClusterResult(db.Model):
     results = db.Column(db.Text, nullable=False) 
 
 
+    scatter_plot = db.Column(db.Text)  # Base64 string
+    bar_chart = db.Column(db.Text)
+    pie_chart = db.Column(db.Text)
+
+
+
+
 
 
 

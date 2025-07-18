@@ -48,11 +48,30 @@ export default function ReviewThemes() {
                 <div className="p-3 border rounded bg-light" style={{ minHeight: '100px' }}>
                     {codewordsData.length > 0 ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                            {codewordsData.map((word, i) => (
-                                <span key={i} className="badge bg-secondary text-light" style={{ fontSize: '0.85rem' }}>
-                                    {word}
-                                </span>
-                            ))}
+                            {codewordsData.map((word, i) => {
+                                const flattenedSeeds = seeds
+                                    .map(seedStr => seedStr.split(','))
+                                    .flat()
+                                    .map(s => s.trim().toLowerCase());
+
+                                const isSeed = flattenedSeeds.includes(word.toLowerCase());
+
+                                return (
+                                    <span
+                                        key={i}
+                                        style={{
+                                            fontSize: '0.85rem',
+                                            padding: '0.2rem 0.7rem',
+                                            borderRadius: '999px',
+                                            backgroundColor: isSeed ? '#38b6ff' : '#6c757d', 
+                                            color: '#fff'
+                                        }}
+                                    >
+                                        {word}
+                                    </span>
+                                );
+                            })}
+
                         </div>
                     ) : (
                         <p className="text-muted m-0">No approved codewords available.</p>

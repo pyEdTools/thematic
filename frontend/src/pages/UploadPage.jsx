@@ -5,7 +5,9 @@ import { Modal, Button } from 'react-bootstrap';
 import CodewordReviewModal from '../components/Modal';
 import { useNavigate } from 'react-router-dom';
 import { FaSpinner } from 'react-icons/fa';
-import '../App.css'; // Assuming you have some global styles
+import { useDropzone } from 'react-dropzone';
+
+import '../App.css'; 
 
 
 export default function UploadPage() {
@@ -25,6 +27,28 @@ export default function UploadPage() {
 
 
     const navigate = useNavigate();
+
+    const onDrop = (acceptedFiles) => {
+        if (acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+            setFileName(file.name);
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => {
+                    setCsvData(results.data);
+                },
+            });
+        }
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: {
+            'text/csv': ['.csv'],
+        },
+    });
+
 
 
     const handleFileChange = (e) => {
@@ -138,93 +162,123 @@ export default function UploadPage() {
 
 
     return (
-        <div className="container mt-4">
-            <p className="small text-muted fw-bold">Instructions:</p>
-            <p className="text-muted" style={{ fontSize: '0.9rem' }}>
-                Input your feedback into a csv file and specify your feedback column name.
-                Before you begin coding make you can help the LLM by giving context of your feedback as well.
+        <div className="container py-4" style={{ maxWidth: '1200px' }}>
+            <h5 className="text-muted fw-bold mb-2">Upload Your Feedback Dataset</h5>
+            <p className="text-muted mb-4" style={{ fontSize: '0.9rem' }}>
+                Upload your open-ended feedback data in CSV format, specify the column with the feedback to simulate thematic analysis.
             </p>
 
-            <form onSubmit={handleSubmit} className="row g-4">
-                <div className="col-md-5">
-                    <div className="mb-3">
-                        <label className="form-label">Upload CSV</label>
-                        <input type="file" className="form-control" accept=".csv" onChange={handleFileChange} />
-                    </div>
+            <form onSubmit={handleSubmit} className="row gx-4 gy-5">
+                {/* LEFT PANEL */}
+                <div className="col-lg-5">
+                    <div className="card border-0 shadow-sm p-4">
+                        <div className="mb-3">
+                            <label className="form-label">Upload CSV</label>
+                            <input
+                                type="file"
+                                className="form-control mb-2"
+                                accept=".csv"
+                                onChange={handleFileChange}
+                            />
 
-                    <div className="mb-3">
-                        <label className="form-label">Feedback Column Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={columnName}
-                            onChange={(e) => setColumnName(e.target.value)}
-                        />
-                    </div>
+                            <div
+                                {...getRootProps()}
+                                className="border rounded p-3 text-center"
+                                style={{
+                                    background: isDragActive ? '#f8f9fa' : '#fcfcfc',
+                                    borderColor: '#ddd',
+                                    borderStyle: 'dashed',
+                                    fontSize: '0.9rem',
+                                    color: '#6c757d',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <input {...getInputProps()} />
+                                {isDragActive ? (
+                                    <span>Drop the CSV file here...</span>
+                                ) : (
+                                    <span>Or drag and drop a CSV file here</span>
+                                )}
+                            </div>
+                        </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Feedback Context</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="e.g., A 4-week AI coding program"
-                            value={context}
-                            onChange={(e) => setContext(e.target.value)}
-                        />
-                    </div>
+                        <div className="mb-3">
+                            <label className="form-label">Feedback Column Name</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="e.g., Response, Feedback"
+                                value={columnName}
+                                onChange={(e) => setColumnName(e.target.value)}
+                            />
+                        </div>
 
-                    <small className='d-flex align-items-center gap-1'>
-                        show{' '}
-                        <button
-                            type="button"
-                            className="btn btn-link p-0"
-                            style={{ fontSize: '0.85rem' }}
-                            onClick={() => setShowImageModal(true)}
-                        >
-                            example
+                        <small className="d-flex align-items-center gap-1">
+                            show{' '}
+                            <button
+                                type="button"
+                                className="btn btn-link p-0"
+                                style={{ fontSize: '0.85rem' }}
+                                onClick={() => setShowImageModal(true)}
+                            >
+                                example
+                            </button>
+                        </small>
+
+                        <button type="submit" className="btn btn-dark w-100 mt-3 py-2">
+                            Generate Codewords
                         </button>
-                    </small>
-
-
-                    <button type="submit" className="btn btn-dark w-100 mt-1 py-2">
-                        Generate Codewords
-                    </button>
-
-                    {isLoading && <FaSpinner className="spin" size="2rem" />}
-
-
+                        {isLoading && (
+                            <div className="text-center mt-3">
+                                <FaSpinner className="spin" size="1.5rem" />
+                            </div>
+                        )}
+                    </div>
                 </div>
 
-                <div className="col-md-7">
-                    <div className="border rounded p-3 bg-light" style={{ height: '21rem', overflowY: 'auto' }}>
+                {/* RIGHT PANEL */}
+                <div className="col-lg-7">
+                    <div
+                        className="card border-0 shadow-sm p-4"
+                        style={{ maxHeight: '600px', overflowY: 'auto' }}
+                    >
                         {csvData.length > 0 ? (
-                            <table className="table table-sm table-bordered table-striped">
+                            <table className="table table-sm table-bordered table-striped mb-0">
                                 <thead>
                                     <tr>
-                                        {Object.keys(csvData[0]).map((header, i) => <th key={i}>{header}</th>)}
+                                        {Object.keys(csvData[0]).map((header, i) => (
+                                            <th key={i}>{header}</th>
+                                        ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {csvData.slice(0, 5).map((row, idx) => (
+                                    {csvData.map((row, idx) => (
                                         <tr key={idx}>
-                                            {Object.values(row).map((cell, i) => <td key={i}>{cell}</td>)}
+                                            {Object.values(row).map((cell, i) => (
+                                                <td key={i}>{cell}</td>
+                                            ))}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         ) : (
-                            <p className="text-muted">Uploaded data will appear here...</p>
+                            <p className="text-muted mb-0">Uploaded data will appear here...</p>
                         )}
                     </div>
                 </div>
             </form>
 
+            {/* Example Modal */}
             <Modal show={showImageModal} onHide={() => setShowImageModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Example Upload</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <img src="/example.png" alt="Example" style={{ width: '100%', borderRadius: '0.5rem' }} />
+                    <img
+                        src="/example.png"
+                        alt="Example"
+                        style={{ width: '100%', borderRadius: '0.5rem' }}
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={() => setShowImageModal(false)}>
@@ -233,8 +287,7 @@ export default function UploadPage() {
                 </Modal.Footer>
             </Modal>
 
-
-
+            {/* Modal for Codeword Review */}
             <CodewordReviewModal
                 show={showModal}
                 onClose={() => setShowModal(false)}
@@ -245,13 +298,24 @@ export default function UploadPage() {
                 onRemoveCodeword={handleRemoveCodeword}
                 onContinue={handleContinue}
                 regeneratingIndex={regeneratingIndex}
-
-                
             />
 
+            {/* Thematic Analysis Process Overview */}
+            <div className="mt-5 pt-5 border-top text-center" style={{ scrollMarginTop: '100px' }}>
+                <h4 className="fw-semibold mb-2">Visualizing the Thematic Analysis Workflow</h4>
+                <p className="text-muted mb-4" style={{ fontSize: '0.95rem' }}>
+                    See how your qualitative feedback moves through each stage of the analysis pipeline.
+                </p>
+                <img
+                    src="/thematic-pipeline.png"
+                    alt="Thematic Analysis Workflow Diagram"
+                    style={{ maxWidth: '100%', borderRadius: '0.75rem' }}
+                />
+            </div>
 
 
-            
+
         </div>
     );
+
 }

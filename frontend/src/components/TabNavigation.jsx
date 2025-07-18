@@ -9,19 +9,19 @@ export default function TabNavigation() {
                 <Nav variant="tabs" defaultActiveKey="/upload" className="custom-tabs">
                     <Nav.Item>
                         <Nav.Link as={NavLink} to="/upload" eventKey="/upload">
-                            Inductive Approach
+                            Thematic Analysis
                         </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    {/* <Nav.Item>
                         <Nav.Link as={NavLink} to="/tbd" eventKey="/tbd">
-                            Deductive Approach
+                            TBD
                         </Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link as={NavLink} to="/cluster-existing" eventKey="/cluster-existing">
                             Cluster Existing Codes
                         </Nav.Link>
-                    </Nav.Item>
+                    </Nav.Item> */}
 
                   
                 </Nav>

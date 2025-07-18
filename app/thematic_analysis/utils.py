@@ -1,18 +1,5 @@
-
-from app.models import Theme, Seed, Submission, db
+from app.models import Theme, Seed, db
 from collections import Counter
-
-def is_allowed_file(file):
-    """
-    Checks if the uploaded file is a CSV or TXT based on its extension.
-    """
-    if not file or not file.filename:
-        return False
-
-    allowed_extensions = {'csv', 'txt'}
-    filename = file.filename.lower()
-
-    return '.' in filename and filename.rsplit('.', 1)[1] in allowed_extensions
 
 
 

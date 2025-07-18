@@ -7,51 +7,78 @@ load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 SYSTEM_PROMPT = """
-You are an educational researcher analyzing qualitative feedback from students. Your task is to generate a small, meaningful set of short code words or phrases 
-that capture the core ideas and underlying meaning of each response.
+Imagine that you are a researcher in education analyzing open-ended feedback. Your task is to identify and label meaningful segments of the text to categorize and analyze them for thematic analysis. 
 
-Generate only as many code words as are necessary to represent the feedback well (usually 1–4).
-For shorter responses, generate fewer code words. For longer or more complex ones, you may include more but not too many, but keep it concise.
+These segments will be known as ‘codes’ and codes can vary in size(i.e. phrases, short sentences, words), but usually codes encompass a complete thought. They can take the form of a descriptive label that directly describes or is taken from the content of the text. However, codes may also be more abstract and complex in the form of literacy references or metaphors. Your job will be to identify these differences by adopting a strategy first.
 
-Code words must:
-- Reflect the researcher’s analytic interest: educational feedback.
-- Be interpretable, descriptive, and meaningful.
-- Avoid repeating surface-level words from the original text.
+For the text, before you label adopt the following strategy of asking yourself:
+What is a student expressing or describing?
+Who is involved in the student’s experience, and what roles do they play?
+When did this experience occur in the learning process?
+Where in the educational context is this taking place?
+What are the stated or underlying reasons behind the student’s experience?
+How is the student navigating or reacting to the situation?
 
-Return the code words in a single comma-separated line.
+Once you adopt this strategy,
 
-Examples: 
+Each codeword should represent a clearly different idea or source of meaning. Be brief and do not paraphrase the same concept multiple ways. Output in a comma-separated lowercase list.
 
-======================================
-Feedback:
-“I was intimidated at first by how good everyone else seemed at coding. But over time, I realized I could keep up and even learned a lot from working with others.”
-imposter syndrome, peer learning, growth mindset
-======================================
-Feedback:
-"I really appreciated that the instructor gave us flexibility in how we tackled the project. It made me more confident about my own process."
-autonomy, self-confidence
-=======================================
+Example #1:
+feedback:
+I struggled to keep up with the lab assignments because instructions were unclear and the teaching assistant wasn’t available when I needed help.
+
+Strategy
+What is the student expressing?
+Struggle with lab assignments
+
+
+Who is involved?
+Teaching assistant
+
+
+When did it occur?
+During assignments
+
+
+Where did it happen?
+Lab setting
+
+
+Why did it happen (explicit or implicit)?
+Unclear instructions, lack of TA support
+
+
+How is the student reacting?
+Expressing frustration and lack of support
+
+
+lab assignment confusion, lack of instructional clarity, frustration with support, earning barrier during labs, TA unavailability
+
+Example #2:
+feedback:
+Although I found the lectures engaging and the professor clearly passionate, I often felt lost during homework because the examples given in class didn’t match the assignment difficulty.
+engaging lectures, passionate professor, homework confusion, mismatch in difficulty, unsupported learning, post-class struggle
+
+Example #3: 
+feedback:
+The group project was helpful because I finally understood the topic after discussing it with my peers.
+group learning, improved understanding
+
+Example #4:
 Feedback: 
-I think I went into the program a little unprepared and I was one of the youngest participants there. So I kind of viewed everyone there as like, I’d say like smarter than me or better at programming. 
-And I mean, I guess that changed as I worked with them and I got to know them better. But like, I got to see how like, their skills actually were, because they were in fact better at programming than I was.
-And, but like, I appreciated that they helped me and things like that. But ultimately, like, I think they were just kind of like inspiring to me. 
-Like I wanted to be like them when I was at their age, but I did kind of view them as like, kind of above me in a way. I think at the start of the program,
-I was like a little bit like frozen in fear because like it was kind of like all at once, right? We just like jumped into programming from day one.
-But I think as the program went on, like I got into it, people helped me and I kind of realized, ‘hey, I can do this. It’s a learning process. 
-Sure, I might have started a little late, but it’s still doable’. So I think I just like I just started working, I guess. And like I just realized I can do something to change like my abilities. So it got better as the course went on.
+professor was rude
+rude professor
 
-initial-intimadation, peer inspiration, growth mindset, overcoming fear, learning process
 """
 
 
 def generate_codewords(feedback_text):
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini-2024-07-18",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": f"Feedback: \"{feedback_text}\""}
         ],
-        temperature=0.3
     )
 
     output = response.choices[0].message.content.strip()
@@ -65,14 +92,14 @@ def generate_seed_words(theme: str) -> list:
 Theme: "{theme}"
 
 Provide 3 short, distinct seed words or phrases that are semantically related to this theme.
-Respond as a comma-separated list only, no extra explanation."""
+Respond as a lower-case, comma-separated list only, no extra explanation."""
 
     client = OpenAI()
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo-0125",
         messages=[{"role": "user", "content": prompt}],
-        temperature=0.5
+        temperature=0.3
     )
 
     seed_text = response.choices[0].message.content.strip()
