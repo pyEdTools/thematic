@@ -12,13 +12,10 @@ import '../App.css';
 
 export default function UploadPage() {
     const [csvData, setCsvData] = useState([]);
-    const [fileName, setFileName] = useState('');
     const [columnName, setColumnName] = useState('');
-    const [themes, setThemes] = useState('');
     const [reviewData, setReviewData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [submissionId, setSubmissionId] = useState(null);
-    const [context, setContext] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showImageModal, setShowImageModal] = useState(false);
     const [regeneratingIndex, setRegeneratingIndex] = useState(null);
@@ -31,7 +28,6 @@ export default function UploadPage() {
     const onDrop = (acceptedFiles) => {
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
-            setFileName(file.name);
             Papa.parse(file, {
                 header: true,
                 skipEmptyLines: true,
@@ -54,7 +50,6 @@ export default function UploadPage() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setFileName(file.name);
             Papa.parse(file, {
                 header: true,
                 skipEmptyLines: true,

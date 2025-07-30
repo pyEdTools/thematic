@@ -16,8 +16,6 @@ export default function ClusterExistingCodes() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showExample, setShowExample] = useState(false);
 
-    const allWords = codeText.split(',').map(w => w.trim().toLowerCase());
-    const duplicates = allWords.filter((item, idx) => allWords.indexOf(item) !== idx);
 
     const handleCluster = async () => {
         const codeList = codeText
