@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from .models import db, Submission, Feedback, ClusterResult
 views = Blueprint('views', __name__)
 from app.thematic_analysis.utils import process_themes_and_seeds, get_codewords
-from backend.app.thematic_analysis.llm_coding import generate_codewords, generate_seed_words
+from app.thematic_analysis.llm_coding import generate_codewords, generate_seed_words
 from app.thematic_analysis.core import define_themes
 import pandas as pd
 from io import StringIO
