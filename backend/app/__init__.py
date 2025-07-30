@@ -10,10 +10,13 @@ DB_NAME = "database.db"
 
 def create_app():
     app = Flask(
-        __name__,
-        static_folder=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'build')),
-        static_url_path='/'
-    )
+    __name__,
+    static_folder=os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'build')
+    ),
+    static_url_path='/'
+)
+
 
     # Secret key (use env variable in production)
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret')
