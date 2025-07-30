@@ -65,12 +65,16 @@ export default function UploadPage() {
         }
     };
 
+    const [errorMessage, setErrorMessage] = useState('');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true)
+        setIsLoading(true);
+        setErrorMessage(''); // Clear previous errors
 
         if (!columnName || csvData.length === 0) {
-            alert('Please upload a file and specify the feedback column.');
+            setErrorMessage('Please upload a file and specify the feedback column.');
+            setIsLoading(false);
             return;
         }
 
@@ -79,19 +83,19 @@ export default function UploadPage() {
             .filter(text => text && text.trim() !== '');
 
         try {
-            const response = await axios.post('/generate', {
+            const response = await axios.post('/api/generate', {
                 feedback: feedbackList
             });
 
             const { submission_id, results } = response.data;
 
             setReviewData(results.map(entry => ({ ...entry, approved: false })));
-            setSubmissionId(submission_id);  // <- saved public_id
+            setSubmissionId(submission_id);
             setShowModal(true);
 
         } catch (error) {
             console.error('Failed to generate codewords:', error);
-            alert('An error occurred while generating codewords.');
+            setErrorMessage('Failed to generate codewords. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -130,7 +134,7 @@ export default function UploadPage() {
 
 
 
-        await axios.post('/approve_codewords', {
+        await axios.post('/api/approve_codewords', {
             approved: approvedEntries
         });
 
@@ -143,7 +147,7 @@ export default function UploadPage() {
 
         try {
             setRegeneratingIndex(idx);  // Start loading
-            const response = await axios.post('/regenerate_one', { text });
+            const response = await axios.post('/api/regenerate_one', { text });
             const updated = [...reviewData];
             updated[idx].codewords = response.data.codewords;
             updated[idx].approved = false;
@@ -225,14 +229,25 @@ export default function UploadPage() {
                             </button>
                         </small>
 
+                        {errorMessage && (
+                            <div className="alert alert-danger mt-3" role="alert">
+                                {errorMessage}
+                            </div>
+                        )}
+
+
                         <button type="submit" className="btn btn-dark w-100 mt-3 py-2">
                             Generate Codewords
                         </button>
                         {isLoading && (
-                            <div className="text-center mt-3">
-                                <FaSpinner className="spin" size="1.5rem" />
+                            <div className="text-center mt-3 d-flex flex-column align-items-center">
+                                <FaSpinner className="spin mb-2" size="1.8rem" />
+                                <p className="text-muted" style={{ fontSize: '0.95rem' }}>
+                                    Generating codewords — this may take a moment...
+                                </p>
                             </div>
                         )}
+
                     </div>
                 </div>
 

@@ -9,7 +9,7 @@ export default function TabNavigation() {
                 <Nav variant="tabs" defaultActiveKey="/upload" className="custom-tabs">
                     <Nav.Item>
                         <Nav.Link as={NavLink} to="/upload" eventKey="/upload">
-                            Thematic Analysis
+                            Upload
                         </Nav.Link>
                     </Nav.Item>
                     {/* <Nav.Item>

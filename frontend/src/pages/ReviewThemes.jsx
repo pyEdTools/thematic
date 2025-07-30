@@ -13,6 +13,7 @@ export default function ReviewThemes() {
     const [showToast, setShowToast] = useState(false);
     const navigate = useNavigate();
 
+
     useEffect(() => {
         const fetchCodewords = async () => {
             const res = await axios.get(`/api/submission/${public_id}/codewords`);

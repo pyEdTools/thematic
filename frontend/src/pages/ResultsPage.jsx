@@ -8,10 +8,17 @@ export default function ResultsPage() {
     const [images, setImages] = useState({
         scatter_plot: '',
         bar_chart: '',
-        pie_chart: ''
+        word_cloud: ''
     });
+    const [expandedThemes, setExpandedThemes] = useState({});
+    const [showAllThemes, setShowAllThemes] = useState(false);
 
-
+    const toggleThemeExpand = (theme) => {
+        setExpandedThemes(prev => ({
+            ...prev,
+            [theme]: !prev[theme]
+        }));
+    };
 
     useEffect(() => {
         axios.get(`/api/submission/${public_id}/results`)
@@ -20,7 +27,7 @@ export default function ResultsPage() {
                 setImages({
                     scatter_plot: res.data.scatter_plot || '',
                     bar_chart: res.data.bar_chart || '',
-                    pie_chart: res.data.pie_chart || ''
+                    word_cloud: res.data.word_cloud || ''
                 });
             })
             .catch(err => console.error("Failed to load clustering results:", err));
@@ -36,76 +43,112 @@ export default function ResultsPage() {
 
     return (
         <div className="container mt-5">
-            <h3 className="mb-2 fw-bold text-center" style={{ fontSize: '2rem' }}>Thematic Clustering Results</h3>
+            <h3 className="mb-2 fw-bold text-center" style={{ fontSize: '2rem' }}>
+                Thematic Clustering Results
+            </h3>
             <p className="text-muted text-center mb-5" style={{ fontSize: '1rem' }}>
                 Visual summary of clustered feedback and their associated themes
             </p>
 
-            {/* Chart Grid */}
-            <div className="row text-center mb-5">
-                <div className="col-md-4 mb-4">
-                    {images.scatter_plot && (
+            {/* Download Button */}
+            <div className="text-center mb-4">
+                <button
+                    onClick={handleDownload}
+                    className="btn btn-info text-white px-4 py-2 rounded-pill shadow-sm"
+                    style={{ fontWeight: '500' }}
+                >
+                    Download Cluster Data
+                </button>
+            </div>
+
+            {/* Plots side-by-side (responsive) */}
+            <div className="row mb-5 text-center g-4">
+                {images.scatter_plot && (
+                    <div className="col-md-4">
                         <img
                             src={images.scatter_plot}
                             alt="Scatter Plot"
-                            className="img-fluid rounded"
-                            style={{ maxHeight: "28rem", objectFit: "contain" }}
+                            className="img-fluid rounded shadow-sm"
+                            style={{ maxWidth: '100%', height: 'auto' }}
                         />
-                    )}
-                    <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>Semantic Scatter Plot</p>
-                </div>
-                <div className="col-md-4 mb-4">
-                    {images.bar_chart && (
+                        <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>
+                            Semantic Scatter Plot
+                        </p>
+                    </div>
+                )}
+
+                {images.bar_chart && (
+                    <div className="col-md-4">
                         <img
                             src={images.bar_chart}
                             alt="Bar Chart"
-                            className="img-fluid rounded"
-                            style={{ maxHeight: "28rem", objectFit: "contain" }}
+                            className="img-fluid rounded shadow-sm"
+                            style={{ maxWidth: '100%', height: 'auto' }}
                         />
-                    )}
-                    <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>Theme Frequencies</p>
-                </div>
-                <div className="col-md-4 mb-4">
-                    {images.pie_chart && (
-                        <img
-                            src={images.pie_chart}
-                            alt="Pie Chart"
-                            className="img-fluid rounded"
-                            style={{ maxHeight: "28rem", objectFit: "contain" }}
-                        />
-                    )}
-                    <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>Theme Distribution</p>
-                </div>
-            </div>
+                        <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>
+                            Theme Frequencies
+                        </p>
+                    </div>
+                )}
 
+                {images.word_cloud && (
+                    <div className="col-md-4">
+                        <img
+                            src={images.word_cloud}
+                            alt="Word Cloud"
+                            className="img-fluid rounded shadow-sm"
+                            style={{ maxWidth: '100%', height: 'auto' }}
+                        />
+                        <p className="mt-3 fw-semibold" style={{ fontSize: "1.1rem" }}>
+                            Word Cloud
+                        </p>
+                    </div>
+                )}
+            </div>
 
             {/* Theme Tables */}
             <div className="mb-5">
                 <div className="row">
-                    {Object.entries(clusters).map(([theme, words], idx) => (
-                        <div key={idx} className="col-md-6 mb-4">
-                            <div className="border rounded p-3 shadow-sm bg-white">
-                                <h5 className="mb-3 fw-bold text-info">{theme}</h5>
-                                <ul className="list-group list-group-flush">
-                                    {words.map((word, i) => (
-                                        <li key={i} className="list-group-item py-2">{word}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                    ))}
+                    {Object.entries(clusters)
+                        .slice(0, showAllThemes ? Object.keys(clusters).length : 10)
+                        .map(([theme, words], idx) => {
+                            const isExpanded = expandedThemes[theme] || false;
+                            const displayedWords = isExpanded ? words : words.slice(0, 5); // show 5 by default
+
+                            return (
+                                <div key={idx} className="col-md-6 mb-4">
+                                    <div className="border rounded p-3 shadow-sm bg-white">
+                                        <h5 className="mb-3 fw-bold text-info">{theme}</h5>
+                                        <ul className="list-group list-group-flush">
+                                            {displayedWords.map((word, i) => (
+                                                <li key={i} className="list-group-item py-2">{word}</li>
+                                            ))}
+                                        </ul>
+                                        {words.length > 5 && (
+                                            <button
+                                                className="btn btn-link btn-sm mt-2"
+                                                onClick={() => toggleThemeExpand(theme)}
+                                            >
+                                                {isExpanded ? 'Show Less ▲' : 'Show More ▼'}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
                 </div>
-            </div>
 
-
-            {/* Download Button */}
-            <div className="text-center mb-5">
-                <button
-                    className="btn btn-info rounded-pill px-4 py-2 fw-bold"
-                    onClick={handleDownload}
-                >
-                    Download Clustered Themes
-                </button>
+                {/* Toggle for showing more themes (10+) */}
+                {Object.keys(clusters).length > 10 && (
+                    <div className="text-center mt-3">
+                        <button
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={() => setShowAllThemes(!showAllThemes)}
+                        >
+                            {showAllThemes ? 'Show Less Themes ▲' : 'Show More Themes ▼'}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
