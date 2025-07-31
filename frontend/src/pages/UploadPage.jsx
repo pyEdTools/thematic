@@ -285,7 +285,7 @@ export default function UploadPage() {
                 </Modal.Header>
                 <Modal.Body>
                     <img
-                        src="/example.png"
+                        src="/example-upload.svg"
                         alt="Example"
                         style={{ width: '100%', borderRadius: '0.5rem' }}
                     />
@@ -317,7 +317,7 @@ export default function UploadPage() {
                     See how your qualitative feedback moves through each stage of the analysis pipeline.
                 </p>
                 <img
-                    src="/thematic-pipeline.png"
+                    src="/thematic-pipeline.svg"
                     alt="Thematic Analysis Workflow Diagram"
                     style={{ maxWidth: '100%', borderRadius: '0.75rem' }}
                 />
