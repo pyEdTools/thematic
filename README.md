@@ -21,7 +21,7 @@ The goal of this app is to help educators analyze qualitative data by automating
 
 ## Live Demo
 
-**Live Demo:** [https://thematic.onrender.com](https://thematic.onrender.com)
+**Live Demo:** [Loom]([https://thematic.onrender.com](https://www.loom.com/share/85f92d54508f4468b32b4a5cadecb829?sid=6a297ae2-7f51-442f-a99b-10740f793542))
 
 
 
@@ -69,6 +69,7 @@ pip install -r requirements.txt
 Create a `.env` file in the `backend` folder:
 ```
 cd backend
+touch .env
 SECRET_KEY=dev-secret
 OPENAI_API_KEY=your_openai_api_key_here
 ```
