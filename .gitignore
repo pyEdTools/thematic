@@ -174,4 +174,14 @@ cython_debug/
 .pypirc
 
 # Images
-.svg
+
+
+
+# Node / React
+node_modules/
+build/
+dist/
+*.log
+
+# Frontend env (if any)
+frontend/.env

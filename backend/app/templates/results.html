@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Thematic Analysis Results{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Thematic Analysis Results</h2>
+
+    {% if results %}
+    {% for theme, feedback_list in results.items() %}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Theme: {{ theme }}
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Feedback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedback_list %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ feedback }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-warning">
+        No analysis results to display.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
