@@ -19,10 +19,9 @@ The goal of this app is to help educators analyze qualitative data by automating
   - [SQLAlchemy](https://www.sqlalchemy.org/) – ORM for database models  
   - [Flask-Migrate](https://flask-migrate.readthedocs.io/) – Database schema migrations  
 
-## Live Demo
+## Demo Video
 
-**Live Demo:** [Loom]([https://thematic.onrender.com](https://www.loom.com/share/85f92d54508f4468b32b4a5cadecb829?sid=6a297ae2-7f51-442f-a99b-10740f793542))
-
+**Demo Video:** [Loom](https://www.loom.com/share/85f92d54508f4468b32b4a5cadecb829?sid=6a297ae2-7f51-442f-a99b-10740f793542)
 
 
 ## Backend Architecture
