@@ -26,7 +26,6 @@ The goal of this app is to help educators analyze qualitative data by automating
 
 
 ## Backend Architecture
-## Backend Architecture
 
 The app follows an AI pipeline where incoming qualitative feedback is processed through the following stages:
 
