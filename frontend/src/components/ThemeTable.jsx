@@ -55,63 +55,137 @@ export default function ThemeSeedTable({ themes, setThemes, seeds, setSeeds }) {
 
     return (
         <>
-            <table className="table table-bordered align-middle">
-                <thead className="table-light">
-                    <tr>
-                        <th style={{ width: '30%' }}>Theme</th>
-                        <th>Seed Words (comma-separated)</th>
-                        <th style={{ width: '5%' }}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {themes.map((theme, i) => (
-                        <tr key={i}>
-                            <td>
-                                <input
-                                    className="form-control"
-                                    placeholder="e.g. collaboration"
-                                    value={theme}
-                                    onChange={(e) => updateTheme(i, e.target.value)}
-                                />
-                            </td>
-                            <td>
-                                <div className="d-flex align-items-center gap-2">
-                                    <input
-                                        className="form-control"
-                                        placeholder="e.g. teamwork, shared goals"
-                                        value={seeds[i]}
-                                        onChange={(e) => updateSeed(i, e.target.value)}
-                                    />
-                                    <button
-                                        className="btn btn-sm btn-outline-secondary"
-                                        onClick={() => suggestSeedWords(i)}
-                                        disabled={!themes[i] || loadingIdx === i}
-                                        type="button"
-                                    >
-                                        {loadingIdx === i ? (
-                                            <Spinner size="sm" animation="border" />
-                                        ) : (
-                                            'Suggest'
-                                        )}
-                                    </button>
-                                </div>
-                            </td>
-
-                            <td>
-                                <button
-                                    className="btn btn-sm btn-outline-danger"
-                                    onClick={() => removeTheme(i)}
+            <div className="card border rounded-3 shadow-sm mb-3">
+                <div className="card-body p-0">
+                    <table className="table align-middle mb-0">
+                        <thead
+                            style={{
+                                background: 'linear-gradient(90deg, #1d4ed8 0%, #facc15 100%)',
+                                color: 'white',
+                                fontWeight: 600,
+                            }}
+                        >
+                            <tr>
+                                <th style={{ width: '30%' }} className="px-3 py-3 rounded-top-start">Theme</th>
+                                <th className="px-3 py-3">Seed Words</th>
+                                <th style={{ width: '5%' }} className="px-3 py-3 rounded-top-end"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {themes.map((theme, i) => (
+                                <tr
+                                    key={i}
+                                    className="align-middle"
+                                    style={{
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                    onMouseEnter={(e) =>
+                                        (e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)')
+                                    }
+                                    onMouseLeave={(e) =>
+                                        (e.currentTarget.style.boxShadow = 'none')
+                                    }
                                 >
-                                    ×
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <button className="btn btn-outline-primary" onClick={addTheme} disabled={themes.length >= 5}>
+                                    {/* Theme Input */}
+                                    <td className="px-3 py-2">
+                                        <input
+                                            className="form-control form-control-sm rounded-pill"
+                                            placeholder="e.g. collaboration"
+                                            value={theme}
+                                            onChange={(e) => updateTheme(i, e.target.value)}
+                                        />
+                                    </td>
+
+                                    {/* Seed Words Input + Chips */}
+                                    <td className="px-3 py-2">
+                                        <div className="d-flex flex-column gap-1">
+                                            <div className="d-flex align-items-center gap-2">
+                                                <input
+                                                    className="form-control form-control-sm rounded-pill"
+                                                    placeholder="e.g. teamwork, shared goals"
+                                                    value={seeds[i]}
+                                                    onChange={(e) => updateSeed(i, e.target.value)}
+                                                />
+                                                <button
+                                                    className="btn btn-sm btn-outline-light text-dark border-secondary"
+                                                    onClick={() => suggestSeedWords(i)}
+                                                    disabled={!themes[i] || loadingIdx === i}
+                                                    type="button"
+                                                    style={{
+                                                        backgroundColor: '#f8f9fa',
+                                                        borderRadius: '999px',
+                                                    }}
+                                                >
+                                                    {loadingIdx === i ? (
+                                                        <Spinner size="sm" animation="border" />
+                                                    ) : (
+                                                        'Suggest'
+                                                    )}
+                                                </button>
+                                            </div>
+
+                                            {/* Chips Preview */}
+                                            <div className="d-flex flex-wrap gap-1 mt-1">
+                                                {seeds[i]
+                                                    .split(',')
+                                                    .map((seed) => seed.trim())
+                                                    .filter((s) => s)
+                                                    .map((seedWord, idx) => (
+                                                        <span
+                                                            key={idx}
+                                                            style={{
+                                                                backgroundColor: '#e0e7ff',
+                                                                color: '#1e3a8a',
+                                                                padding: '0.2rem 0.6rem',
+                                                                fontSize: '0.75rem',
+                                                                borderRadius: '999px',
+                                                                fontWeight: 500,
+                                                            }}
+                                                        >
+                                                            {seedWord}
+                                                        </span>
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    {/* Remove Button */}
+                                    <td className="px-3 py-2 text-center">
+                                        <button
+                                            className="btn btn-sm border-0 text-danger"
+                                            style={{
+                                                fontSize: '1.2rem',
+                                                lineHeight: '1',
+                                                transition: 'transform 0.2s ease, color 0.2s ease',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.transform = 'scale(1.2)';
+                                                e.currentTarget.style.color = '#dc2626';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.transform = 'scale(1)';
+                                                e.currentTarget.style.color = '#dc3545';
+                                            }}
+                                            onClick={() => removeTheme(i)}
+                                        >
+                                            ×
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button
+                className="btn btn-outline-primary rounded-pill"
+                onClick={addTheme}
+                disabled={themes.length >= 5}
+            >
                 + Add Theme
             </button>
         </>
     );
+
 }

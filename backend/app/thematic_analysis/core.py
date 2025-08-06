@@ -4,6 +4,27 @@ from collections import defaultdict
 import numpy as np
 from wordcloud import WordCloud
 
+import matplotlib.patches as mpatches
+from matplotlib.patches import Ellipse
+
+def draw_cluster_ellipse(ax, x, y, color):
+    cov = np.cov(x, y)
+    eigenvals, eigenvecs = np.linalg.eigh(cov)
+    order = eigenvals.argsort()[::-1]
+    eigenvals, eigenvecs = eigenvals[order], eigenvecs[:, order]
+
+    angle = np.degrees(np.arctan2(*eigenvecs[:, 0][::-1]))
+    width, height = 2 * np.sqrt(eigenvals)  # scale for visualization
+    ellipse = Ellipse(
+        (np.mean(x), np.mean(y)),
+        width * 2, height * 2,
+        angle=angle,
+        edgecolor=color,
+        facecolor=color,
+        alpha=0.15,
+        lw=2
+    )
+    ax.add_patch(ellipse)
 
 
 def define_themes(words_list, theme_seeds):
@@ -61,6 +82,8 @@ def generate_scatterplot(words_list, word_embeddings, clusters, theme_labels):
         'X': reduced_embeddings[:, 0],
         'Y': reduced_embeddings[:, 1],
         'Theme': [theme_labels[cluster] for cluster in clusters],
+        'Word': words_list,
+
     })
 
     # Generate color palette
@@ -69,12 +92,14 @@ def generate_scatterplot(words_list, word_embeddings, clusters, theme_labels):
     theme_palette = dict(zip(unique_themes, colors))
 
     # Plot
-    plt.figure(figsize=(20, 13))
+    plt.figure(figsize=(24, 15))
 
     # Scatter plot points by theme
     for theme, color in theme_palette.items():
         subset = df[df['Theme'] == theme]
         plt.scatter(subset['X'], subset['Y'], s=220, color=color, alpha=0.8, label=theme, edgecolors='none')
+        draw_cluster_ellipse(plt.gca(), subset['X'], subset['Y'], color)
+
 
     if len(words_list) <= 20:
         for i, row in df.iterrows():
@@ -82,7 +107,7 @@ def generate_scatterplot(words_list, word_embeddings, clusters, theme_labels):
                      fontsize=24, ha='left', va='bottom')
 
     # Styling
-    plt.title('Semantic Clustering of Words by Theme', fontsize=44, fontweight='bold', pad=20)
+    # plt.title('Semantic Clustering of Words by Theme', fontsize=44, fontweight='bold', pad=20)
     plt.xlabel('PCA Component 1', fontsize=38, labelpad=10)
     plt.ylabel('PCA Component 2', fontsize=38, labelpad=10)
     plt.xticks(fontsize=32)
@@ -127,7 +152,7 @@ def generate_bar_chart(clustered_words):
     colors = plt.cm.viridis(np.linspace(0.2, 0.8, len(themes)))
 
     # Create figure
-    plt.figure(figsize=(16, 9))
+    plt.figure(figsize=(24, 15))
     bars = plt.bar(themes, counts, color=colors, edgecolor='none')
 
     # Add value labels above bars
@@ -145,7 +170,7 @@ def generate_bar_chart(clustered_words):
 
     # Labels and title
     plt.ylabel("Frequency", fontsize=30, labelpad=15)
-    plt.title("Theme Frequency", fontsize=38, pad=20, fontweight='bold')
+    # plt.title("Theme Frequency", fontsize=38, pad=20, fontweight='bold')
     plt.xticks(rotation=25, ha='right', fontsize=36)
     plt.yticks(fontsize=32)
 
@@ -176,43 +201,69 @@ def generate_bar_chart(clustered_words):
 
 
 def generate_wordcloud(clustered_words):
-    # Flatten all codes into one list
-    codes = []
-    for words in clustered_words.values():
-        codes.extend(words)
+    """
+    Generate a heatmap showing overlap (cosine similarity) between themes.
+    Replaces the word cloud for better analytical insight.
+    """
+    # Themes
+    themes = list(clustered_words.keys())
 
-    # Equal frequency for each unique code
-    freq = {word: 1 for word in set(codes)}
+    # If less than 2 themes, return empty plot
+    if len(themes) < 2:
+        plt.figure(figsize=(24, 15))
+        plt.text(0.5, 0.5, "Not enough themes for overlap matrix",
+                 ha='center', va='center', fontsize=26, color='#666666')
+        plt.axis('off')
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', dpi=200, transparent=True)
+        buffer.seek(0)
+        plt.close()
+        return f"data:image/png;base64,{base64.b64encode(buffer.read()).decode('utf-8')}"
 
-    # Modern word cloud style
-    wordcloud = WordCloud(
-        width=1200,
-        height=600,
-        background_color=None,    # transparent background
-        mode='RGBA',              # required for transparency
-        colormap='viridis',       # modern color palette
-        prefer_horizontal=0.9,    # mostly horizontal, some vertical
-        min_font_size=14,
-        max_font_size=120,
-        random_state=42
-    ).generate_from_frequencies(freq)
+    # Use SentenceTransformer to encode each theme's words
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    # Plot
-    plt.figure(figsize=(16, 9))
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis('off')
-    plt.tight_layout(pad=0)
+    # Create embeddings per theme (average of its words)
+    theme_embeddings = []
+    for theme in themes:
+        words = clustered_words[theme]
+        if words:
+            emb = model.encode(words)
+            avg_emb = np.mean(emb, axis=0)
+        else:
+            avg_emb = np.zeros(model.get_sentence_embedding_dimension())
+        theme_embeddings.append(avg_emb)
 
-    # Convert to base64
+    # Compute cosine similarity matrix
+    from sklearn.metrics.pairwise import cosine_similarity
+    similarity_matrix = cosine_similarity(theme_embeddings)
+
+    # Plot heatmap
+    plt.figure(figsize=(24, 15))
+    sns.heatmap(
+        similarity_matrix,
+        xticklabels=themes,
+        yticklabels=themes,
+        cmap="coolwarm",
+        annot=True,
+        fmt=".2f",
+        square=True,
+        annot_kws={"size": 32, "weight": "bold"},
+        cbar_kws={"shrink": 0.7}
+    )
+
+    plt.xticks(rotation=30, ha='right', fontsize=38, weight='bold')
+    plt.yticks(rotation=0, fontsize=38, weight='bold')
+
+    plt.tight_layout()
+
+    # Save to base64
     buffer = io.BytesIO()
-    plt.savefig(buffer, format='png', dpi=200, transparent=True)  # crisp + transparent
+    plt.savefig(buffer, format='png', dpi=200, bbox_inches="tight", transparent=True)
     buffer.seek(0)
     plt.close()
 
     return f"data:image/png;base64,{base64.b64encode(buffer.read()).decode('utf-8')}"
-
-
-
 
 # run a test if __name__ == "__main__":
 if __name__ == "__main__":

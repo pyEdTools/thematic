@@ -78,7 +78,7 @@ OPENAI_API_KEY=your_openai_api_key_here
 ```
 python main.py
 ```
-Flask should say: Running on `http://127.0.0.1:5001`
+Flask should say: Running on `http://127.0.0.1:5000`
 ---
 
 ### 5. Frontend Setup
@@ -93,7 +93,7 @@ React dev server will run on `http://localhost:3000`.
 
 ### 6. Viewing the Application
 - Open http://localhost:3000 to view the frontend.
-- The frontend will automatically proxy API calls to the Flask backend running at http://127.0.0.1:5001.
+- The frontend will automatically proxy API calls to the Flask backend running at http://127.0.0.1:5000.
 
 ---
 
