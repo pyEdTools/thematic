@@ -10,3 +10,6 @@ python-multipart
 openai
 python-dotenv
 supabase
+pytest
+pytest-asyncio
+httpx

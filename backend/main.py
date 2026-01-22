@@ -89,25 +89,80 @@ def run_process_coding_task(project_id: str, row_ids: List[str]):
             try:
                 content = str(row.get('content', ''))
                 prompt = """
-                Analyze this feedback segment for qualitative research: "{content}"
+Imagine that you are a researcher in education analyzing open-ended feedback. Your task is to identify and label meaningful segments of the text to categorize and analyze them for thematic analysis. 
 
-                TASK: Identify 1 to 3 distinct ideas or topics. 
-                For each, provide a "code" (1-4 words) and a sentiment score (-1.0 to 1.0).
+These segments will be known as ‘codes’ and codes can vary in size (i.e. phrases, short sentences, words), but usually codes encompass a complete thought. They can take the form of a descriptive label that directly describes or is taken from the content of the text. However, codes may also be more abstract and complex in the form of literacy references or metaphors. Your job will be to identify these differences by adopting a strategy first.
 
-                CODING RULES:
-                1. EXPLICIT: If an idea is clearly stated, use a concise snippet or direct paraphrase as the code (e.g., "Midterm Difficulty").
-                2. INTERPRETIVE: If the feedback implies a deeper underlying pattern, implication, or researcher observation, use an analytical label (e.g., "Assessment Misalignment").
-                3. DISTINCT: Ensure codes don't overlap in meaning.
-                4. ORDER: Prioritize the most significant ideas.
+STRATEGY:
+Before you label, adopt the strategy of asking yourself:
+- What is a student expressing or describing?
+- Who is involved in the student’s experience, and what roles do they play?
+- When did this experience occur in the learning process?
+- Where in the educational context is this taking place?
+- What are the stated or underlying reasons behind the student’s experience?
+- How is the student navigating or reacting to the situation?
 
-                Return ONLY a JSON object containing a list of codes like this:
-                {
-                  "codes": [
-                    {"code": "Primary Idea", "sentiment": 0.5},
-                    {"code": "Secondary Idea", "sentiment": -0.2}
-                  ]
-                }
-                """.replace("{content}", content)
+TASK:
+Analyze this feedback segment: "{content}"
+
+Identify 1 to 5 distinct codes. For each code, provide a lowercase label and a sentiment score (-1.0 to 1.0).
+
+RULES:
+1. Each code should represent a clearly different idea or source of meaning.
+2. Be brief and do not paraphrase the same concept multiple ways.
+3. Use lowercase for all codes.
+4. Return ONLY a JSON object.
+
+JSON FORMAT:
+{
+  "codes": [
+    {"code": "code label", "sentiment": 0.5},
+    {"code": "another label", "sentiment": -0.2}
+  ]
+}
+
+Example #1:
+feedback: I struggled to keep up with the lab assignments because instructions were unclear and the teaching assistant wasn’t available when I needed help.
+Output: {
+  "codes": [
+    {"code": "lab assignment confusion", "sentiment": -0.6},
+    {"code": "lack of instructional clarity", "sentiment": -0.5},
+    {"code": "frustration with support", "sentiment": -0.7},
+    {"code": "learning barrier during labs", "sentiment": -0.4},
+    {"code": "ta unavailability", "sentiment": -0.8}
+  ]
+}
+
+Example #2:
+feedback: Although I found the lectures engaging and the professor clearly passionate, I often felt lost during homework because the examples given in class didn’t match the assignment difficulty.
+Output: {
+  "codes": [
+    {"code": "engaging lectures", "sentiment": 0.8},
+    {"code": "passionate professor", "sentiment": 0.9},
+    {"code": "homework confusion", "sentiment": -0.5},
+    {"code": "mismatch in difficulty", "sentiment": -0.6},
+    {"code": "unsupported learning", "sentiment": -0.4},
+    {"code": "post-class struggle", "sentiment": -0.3}
+  ]
+}
+
+Example #3: 
+feedback: The group project was helpful because I finally understood the topic after discussing it with my peers.
+Output: {
+  "codes": [
+    {"code": "group learning", "sentiment": 0.8},
+    {"code": "improved understanding", "sentiment": 0.7}
+  ]
+}
+
+Example #4:
+feedback: professor was rude
+Output: {
+  "codes": [
+    {"code": "rude professor", "sentiment": -0.9}
+  ]
+}
+""".replace("{content}", content)
 
                 completion = openai_client.chat.completions.create(
                     model="gpt-4o-mini",
