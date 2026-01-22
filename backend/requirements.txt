@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pandas
+scikit-learn
+numpy<2.0
+sentence-transformers
+transformers
+torch
+python-multipart
+openai
+python-dotenv
+supabase
