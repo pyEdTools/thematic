@@ -2,8 +2,8 @@
 
 TAForEd is a research-grade platform designed to help educators and researchers analyze open-ended student feedback using Machine Learning and Large Language Models. It automates the process of extracting codes, sentiment analysis, and thematic clustering to provide actionable insights.
 
-![AI Pipeline Architecture](https://github.com/pyEdTools/thematic/raw/main/backend_architecture.png)
-*(Note: Replace with your actual hosted image path if different)*
+![AI Pipeline Architecture](docs/ai-pipeline-architecture.svg)
+*(Diagram showing the thematic analysis pipeline)*
 
 ## Features
 
