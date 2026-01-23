@@ -318,7 +318,7 @@ export const ThemeVisualization: React.FC<ThemeVisualizationProps> = ({ projectI
   };
 
   const getNormalizedPoints = () => {
-    if (points.length === 0) return [];
+    if (points.length === 0) return { normalizedPoints: [], ranges: { minX: 0, maxX: 0, minY: 0, maxY: 0 } };
     const xs = points.map(p => p.x);
     const ys = points.map(p => p.y);
     const minX = Math.min(...xs);
@@ -328,7 +328,7 @@ export const ThemeVisualization: React.FC<ThemeVisualizationProps> = ({ projectI
     const rangeX = maxX - minX || 1;
     const rangeY = maxY - minY || 1;
 
-    return points.map(p => {
+    const normalizedPoints = points.map(p => {
       // Add deterministic jitter based on ID so overlapping points become visible
       // but stay in the same place across re-renders
       const hash = p.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -338,12 +338,23 @@ export const ThemeVisualization: React.FC<ThemeVisualizationProps> = ({ projectI
       return {
         ...p,
         normX: ((p.x - minX) / rangeX) * 80 + 10 + jitterX,
-        normY: ((p.y - minY) / rangeY) * 80 + 10 + jitterY
+        normY: 90 - ((p.y - minY) / rangeY) * 80 + jitterY
       };
     });
+
+    return { normalizedPoints, ranges: { minX, maxX, minY, maxY } };
   };
 
-  const normPoints = getNormalizedPoints();
+  const { normalizedPoints: normPoints, ranges } = getNormalizedPoints();
+
+  const getAxisTicks = (min: number, max: number, count: number = 5) => {
+    const ticks = [];
+    const step = (max - min) / (count - 1);
+    for (let i = 0; i < count; i++) {
+      ticks.push(min + step * i);
+    }
+    return ticks;
+  };
   const colors = ['#00bbf9', '#fee440', '#9b5de5', '#284b63', '#353535', '#d9d9d9'];
 
   // Create a consistent color map for themes
@@ -433,8 +444,30 @@ export const ThemeVisualization: React.FC<ThemeVisualizationProps> = ({ projectI
               <text x="2" y="50" textAnchor="middle" transform="rotate(-90, 2, 50)" className="text-[3px] font-black fill-gray-400 uppercase tracking-widest">Principal Component 2</text>
               
               {/* Grid Lines (Subtle) */}
-              <line x1="10" y1="10" x2="10" y2="90" stroke="currentColor" strokeWidth="0.1" className="text-gray-100" />
-              <line x1="10" y1="90" x2="90" y2="90" stroke="currentColor" strokeWidth="0.1" className="text-gray-100" />
+              <line x1="10" y1="10" x2="10" y2="90" stroke="currentColor" strokeWidth="0.1" className="text-gray-200" />
+              <line x1="10" y1="90" x2="90" y2="90" stroke="currentColor" strokeWidth="0.1" className="text-gray-200" />
+
+              {/* X-axis Ticks */}
+              {getAxisTicks(ranges.minX, ranges.maxX).map((tick, i) => {
+                const xPos = 10 + (i * 80) / 4;
+                return (
+                  <g key={`x-tick-${i}`}>
+                    <line x1={xPos} y1="90" x2={xPos} y2="91.5" stroke="currentColor" strokeWidth="0.1" className="text-gray-300" />
+                    <text x={xPos} y="94" textAnchor="middle" className="text-[2px] font-bold fill-gray-400">{tick.toFixed(2)}</text>
+                  </g>
+                );
+              })}
+
+              {/* Y-axis Ticks */}
+              {getAxisTicks(ranges.minY, ranges.maxY).map((tick, i) => {
+                const yPos = 90 - (i * 80) / 4;
+                return (
+                  <g key={`y-tick-${i}`}>
+                    <line x1="8.5" y1={yPos} x2="10" y2={yPos} stroke="currentColor" strokeWidth="0.1" className="text-gray-300" />
+                    <text x="7.5" y={yPos} textAnchor="end" dominantBaseline="middle" className="text-[2px] font-bold fill-gray-400">{tick.toFixed(2)}</text>
+                  </g>
+                );
+              })}
 
               {normPoints.map((point) => (
                 <motion.circle

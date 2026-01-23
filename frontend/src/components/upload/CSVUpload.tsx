@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Papa from 'papaparse';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { toast } from 'sonner';
 import { Upload, FileText, Check, Loader2, X, Database } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

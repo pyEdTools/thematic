@@ -1,0 +1,41 @@
+id,date,course,student_name,feedback_text,rating
+1,2025-10-01,CS101,Alice Johnson,"The course was well-structured, but the weekly assignments were a bit too long.",4
+2,2025-10-02,CS101,Bob Smith,"I really enjoyed the guest lectures. They provided great real-world context.",5
+3,2025-10-03,CS101,Charlie Brown,"The mid-term exam was much harder than the practice problems provided.",2
+4,2025-10-04,MATH200,Diana Prince,"The professor explains complex concepts very clearly. Highly recommended.",5
+5,2025-10-05,MATH200,Ethan Hunt,"I wish there were more office hours available. It's hard to get help.",3
+6,2025-10-06,ENG102,Fiona Gallagher,"The reading list was very diverse and interesting. I loved the poetry section.",5
+7,2025-10-07,ENG102,George Miller,"The grading criteria for the essays were a bit ambiguous.",3
+8,2025-10-08,PHYS150,Hannah Abbott,"The lab sessions were disorganized and some equipment didn't work.",2
+9,2025-10-09,PHYS150,Ian Wright,"Great course overall, but the textbook is extremely expensive.",4
+10,2025-10-10,CS101,Jane Doe,"The online platform for submitting code was frequently down.",1
+11,2025-10-11,CS101,Kevin Bacon,"The TA was very helpful during the coding workshops.",5
+12,2025-10-12,MATH200,Laura Croft,"The problem sets were challenging but rewarding.",4
+13,2025-10-13,ENG102,Mike Myers,"I found the group discussion sessions a bit chaotic.",2
+14,2025-10-14,PHYS150,Nina Simone,"The lecture slides are a bit cluttered and hard to read.",3
+15,2025-10-15,CS101,Oscar Isaac,"I would appreciate more feedback on the early project drafts.",3
+16,2025-10-16,MATH200,Peter Parker,"The exam review session was a lifesaver.",5
+17,2025-10-17,ENG102,Quinn Fabray,"The final essay topic was very open-ended and creative.",4
+18,2025-10-18,PHYS150,Riley Reid,"I struggled with the calculus required for this physics course.",2
+19,2025-10-19,CS101,Sam Wilson,"The collaborative project was the highlight of the semester.",5
+20,2025-10-20,MATH200,Tina Fey,"The textbook examples don't match the homework difficulty.",2
+21,2025-10-21,ENG102,Ursula Corbero,"The guest speaker on modern literature was fascinating.",5
+22,2025-10-22,PHYS150,Victor Hugo,"The labs were too short for the amount of work required.",3
+23,2025-10-23,CS101,Wanda Maximoff,"I loved the practical approach to software design.",5
+24,2025-10-24,MATH200,Xavier Renegade Angel,"The logic puzzles in the second half were quite abstract.",3
+25,2025-10-25,ENG102,Yara Shahidi,"The peer review process was helpful for improving my writing.",4
+26,2025-10-26,CS101,Zoe Saldana,"The documentation for the final project was very clear.",5
+27,2025-10-27,MATH200,Arthur Curry,"The professor's pace was a bit too fast for me to follow.",2
+28,2025-10-28,ENG102,Barry Allen,"I enjoyed the focus on contemporary novelists in this course.",4
+29,2025-10-29,PHYS150,Caitlin Snow,"The theoretical parts were interesting, but labs were frustrating.",3
+30,2025-10-30,CS101,Dick Grayson,"The coding style guidelines were very helpful for my learning.",5
+31,2025-10-31,MATH200,Edward Nigma,"The bonus questions on the quizzes were very fun and challenging.",5
+32,2025-11-01,ENG102,Felicity Smoak,"I found the online discussion forums to be very engaging.",4
+33,2025-11-02,PHYS150,Guy Gardner,"The lecture hall was always too cold, making it hard to focus.",2
+34,2025-11-03,CS101,Hal Jordan,"I wish we had more examples of real-world applications for the code.",3
+35,2025-11-04,MATH200,Iris West,"The teaching assistant for the recitation was excellent.",5
+36,2025-11-05,ENG102,John Diggle,"The assigned readings were a bit too heavy for a 3-unit course.",3
+37,2025-11-06,PHYS150,Kara Danvers,"I loved the section on astrophysics. It was the best part of the course.",5
+38,2025-11-07,CS101,Lex Luthor,"The final project requirements were a bit too restrictive.",2
+39,2025-11-08,MATH200,Mick Rory,"I think the course needs more focus on practical problem solving.",3
+40,2025-11-09,ENG102,Nia Nal,"The creative writing workshop was extremely helpful for my project.",5

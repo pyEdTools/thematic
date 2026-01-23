@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ProjectList } from '@/components/ProjectList';
-import { CreateProject } from '@/components/CreateProject';
+import { ProjectList } from '@/components/projects/ProjectList';
+import { CreateProject } from '@/components/projects/CreateProject';
 import { LayoutDashboard, Plus, X, Search, Settings, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';

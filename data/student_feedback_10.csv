@@ -1,0 +1,11 @@
+id,date,course,student_name,feedback_text,rating
+1,2025-10-01,CS101,Alice Johnson,"The course was well-structured, but the weekly assignments were a bit too long.",4
+2,2025-10-02,CS101,Bob Smith,"I really enjoyed the guest lectures. They provided great real-world context.",5
+3,2025-10-03,CS101,Charlie Brown,"The mid-term exam was much harder than the practice problems provided.",2
+4,2025-10-04,MATH200,Diana Prince,"The professor explains complex concepts very clearly. Highly recommended.",5
+5,2025-10-05,MATH200,Ethan Hunt,"I wish there were more office hours available. It's hard to get help.",3
+6,2025-10-06,ENG102,Fiona Gallagher,"The reading list was very diverse and interesting. I loved the poetry section.",5
+7,2025-10-07,ENG102,George Miller,"The grading criteria for the essays were a bit ambiguous.",3
+8,2025-10-08,PHYS150,Hannah Abbott,"The lab sessions were disorganized and some equipment didn't work.",2
+9,2025-10-09,PHYS150,Ian Wright,"Great course overall, but the textbook is extremely expensive.",4
+10,2025-10-10,CS101,Jane Doe,"The online platform for submitting code was frequently down.",1

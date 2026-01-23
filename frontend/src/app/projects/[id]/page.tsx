@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { CSVUpload } from '@/components/CSVUpload';
-import { SeedThemeBuilder } from '@/components/SeedThemeBuilder';
-import { ThemeVisualization } from '@/components/ThemeVisualization';
-import { DataInspector } from '@/components/DataInspector';
-import { ThemeResults } from '@/components/ThemeResults';
+import { CSVUpload } from '@/components/upload/CSVUpload';
+import { SeedThemeBuilder } from '@/components/themes/SeedThemeBuilder';
+import { ThemeVisualization } from '@/components/themes/ThemeVisualization';
+import { DataInspector } from '@/components/data/DataInspector';
+import { ThemeResults } from '@/components/themes/ThemeResults';
 import { processCoding, runFullPipeline, getProjectStatus } from '@/lib/api';
 import { toast } from 'sonner';
 import { 

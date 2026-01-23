@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TAForEd: Thematic Analysis for Education
+
+TAForEd is a platform designed to help educators and researchers analyze open-ended student feedback using Machine Learning and Large Language Models. It automates the process of extracting codes, sentiment analysis, and thematic clustering to provide actionable insights into the student experience.
+
+## Features
+
+- **Automated Coding**: Uses LLMs (GPT-4o-mini) to extract meaningful codes from raw feedback.
+- **Sentiment Analysis**: Assigns sentiment scores to each identified code.
+- **Thematic Clustering**: Uses Sentence Transformers and K-Means clustering to group similar feedback into themes.
+- **Data Visualization**: PCA-based 2D visualization of feedback clusters.
+- **Real-time Status**: Background task processing with status updates via Supabase.
+
+## Tech Stack
+
+- **Frontend**: Next.js (App Router), Tailwind CSS, Lucide React.
+- **Backend**: FastAPI (Python), Sentence-Transformers, Scikit-learn.
+- **Database**: Supabase (PostgreSQL + Vector support).
+- **AI**: OpenAI API (GPT-4o-mini).
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v18+)
+- Python (3.9+)
+- Supabase Account
+- OpenAI API Key
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/pyEdTools/thematic
+   cd TAForEd
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Frontend Setup**:
+   ```bash
+   cd frontend
+   npm install
+   cp .env.example .env.local  # Update with your Supabase credentials
+   npm run dev
+   ```
 
-## Learn More
+3. **Backend Setup**:
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
